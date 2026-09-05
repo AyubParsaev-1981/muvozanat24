@@ -36,14 +36,23 @@ const AINutritionist = {
     /\b(avtomobil|mashina\s+narxi|bmw|mercedes|gentra|kino|serial|aktrisa|futbol|messi|ronaldo|valyuta\s+kursi|dollar\s+kursi|kriptovalyuta|bitcoin)\b/i
   ],
 
-  // Parhez va sog'lom ovqatlanishga oid ruxsat etilgan kalit so'zlar
+  // Parhez va sog'lom ovqatlanishga oid ruxsat etilgan kalit so'zlar (Lotin va Kirill)
   NUTRITION_KEYWORDS: [
     'osh', 'palov', 'manti', 'somsa', 'shurva', 'sho\'rva', 'dimlama', 'mastava', 'shashlik', 'beshbarmak', 'qazi',
     'kaloriya', 'vazn', 'ozish', 'semirish', 'parhez', 'diet', 'dieta', 'oqsil', 'uglevod', 'yog\'', 'vitamin',
     'non', 'shakar', 'tuz', 'suv', 'choy', 'nonushta', 'tushlik', 'kechki', 'ovqat', 'taom', 'ochlik', 'ishtaha',
     'metabolizm', 'bmr', 'tdee', 'bmi', 'mifflin', 'sabzavot', 'meva', 'go\'sht', 'tovuq', 'baliq', 'tuxum', 'qatiq',
     'salat', 'achchiq-chuchuk', 'chuchvara', 'qorin', 'bel', 'yog\'larni', 'sport', 'mashq', 'qadam', 'porsiya',
-    'калори', 'вес', 'похуде', 'диета', 'белок', 'жир', 'углевод', 'вода', 'плов', 'манты', 'самса', 'порци'
+    'kilo', 'kg', 'qancha', 'nima', 'yeyish', 'mumkin', 'mumkinmi', 'retsept', 'ratsion', 'menyu',
+    // Kirillcha kalit so'zlar:
+    'ош', 'палов', 'манти', 'сомса', 'шўрва', 'шурва', 'димлама', 'мастава', 'шашлик', 'бешбармоқ', 'қази',
+    'калория', 'калори', 'вазн', 'озиш', 'семириш', 'парҳез', 'диет', 'диета', 'оқсил', 'углевод', 'ёғ', 'витамин',
+    'нон', 'шакар', 'туз', 'сув', 'чой', 'нонушта', 'тушлик', 'кечки', 'овқат', 'таом', 'очлик', 'иштаҳа',
+    'метаболизм', 'сабзавот', 'мева', 'гўшт', 'товуқ', 'балиқ', 'тухум', 'қатиқ', 'салат', 'аччиқ-чучук',
+    'чучвара', 'қорин', 'бел', 'спорт', 'машқ', 'қадам', 'порция', 'порци', 'кило', 'кг', 'қандай', 'нима',
+    'ейиш', 'мумкин', 'мумкинми', 'ёрдам', 'маслаҳат', 'меню', 'рацион', 'нутрициолог', 'шифокор',
+    // Ruscha
+    'похуде', 'белок', 'жир', 'вода', 'вес'
   ],
 
   isOpen: false,
@@ -70,8 +79,12 @@ const AINutritionist = {
     // 2-bosqich: Parhez va ovqatlanishga doir kalit so'zlardan kamida bittasi bormi?
     const hasNutritionTerm = this.NUTRITION_KEYWORDS.some(kw => cleanText.includes(kw));
 
-    // Umumiy salomlashishlar ruxsat etiladi
-    const greetings = ['salom', 'assalomu alaykum', 'qalesiz', 'qalaysiz', 'rahmat', 'privet', 'zdravstvuyte'];
+    // Umumiy salomlashishlar ruxsat etiladi (Lotin, Kirill, Ruscha)
+    const greetings = [
+      'salom', 'assalomu alaykum', 'qalesiz', 'qalaysiz', 'rahmat', 'yordam',
+      'салом', 'ассалому алайкум', 'қалайсиз', 'раҳмат', 'ёрдам', 'доктор',
+      'privet', 'zdravstvuyte', 'привет', 'здравствуйте'
+    ];
     const isGreeting = greetings.some(g => cleanText.includes(g));
 
     return hasNutritionTerm || isGreeting;
@@ -191,18 +204,25 @@ const AINutritionist = {
     // Kontekst
     const ctx = this.getUserContext();
     const apiKey = localStorage.getItem('muvozanat_ai_api_key') || (window.MUVOZANAT_CONFIG && window.MUVOZANAT_CONFIG.OPENAI_API_KEY) || this.DEFAULT_OPENAI_KEY;
-    const apiProvider = localStorage.getItem('muvozanat_ai_provider') || 'openai';
+    
+    // Provayderni kalit formatiga qarab aniqlash (sk- bilan boshlansa doim OpenAI)
+    let apiProvider = localStorage.getItem('muvozanat_ai_provider') || 'openai';
+    if (apiKey && apiKey.startsWith('sk-')) {
+      apiProvider = 'openai';
+    } else if (apiKey && apiKey.startsWith('AIza')) {
+      apiProvider = 'gemini';
+    }
 
     // OpenAI yoki Gemini API chaqiruvi
     if (apiKey) {
       try {
         const response = await this.callExternalLLM(userMessage, ctx, apiKey, apiProvider);
-        if (response) {
+        if (response && response.trim().length > 0) {
           this.incrementUsage();
           return response;
         }
       } catch (e) {
-        console.warn("External LLM failed, using internal expert engine:", e);
+        console.warn("Tashqi LLM chaqiruvida xatolik, ichki bilimlardan foydalaniladi:", e);
       }
     }
 
@@ -215,45 +235,45 @@ const AINutritionist = {
   generateSmartLocalAnswer(msg, ctx) {
     const lower = msg.toLowerCase();
 
-    if (lower.includes('salom') || lower.includes('assalomu')) {
+    if (lower.includes('salom') || lower.includes('assalomu') || lower.includes('салом') || lower.includes('ассалому')) {
       return `Assalomu alaykum, ${ctx.name}! Men sizning shaxsiy AI-Nutrisiologingizman. Bugun sizga qaysi taom yoki vazn nazorati bo'yicha yordam beray?`;
     }
 
-    if (lower.includes('palov') || lower.includes('osh')) {
+    if (lower.includes('palov') || lower.includes('osh') || lower.includes('палов') || lower.includes('ош')) {
       return `🍚 <b>Toshkent to'y oshi tahlili:</b>\n` +
-             `• Standart порция (250g): ~580 kkal (Oqsil: 22g, Yog': 26g, Uglevod: 64g).\n` +
+             `• Standart porsiya (250g): ~580 kkal (Oqsil: 22g, Yog': 26g, Uglevod: 64g).\n` +
              `• <b>Nutrisiolog maslahati:</b> Ozingizni oshdan cheklamang! Osh yeyayotganda laganning yog'sizroq qismini tanlang, unga katta likopchada <b>Achchiq-chuchuk salat</b> qo'shing va bir piyola issiq ko'k choy iching. Agar tushlikda osh yesangiz, kechki ovqatni tovuq filesi va sabzavotli salatga (280 kkal) almashtirish kifoya!`;
     }
 
-    if (lower.includes('tushlik') || lower.includes('nima yesam') || lower.includes('reja')) {
+    if (lower.includes('tushlik') || lower.includes('nima yesam') || lower.includes('reja') || lower.includes('тушлик') || lower.includes('нима есам')) {
       return `🥗 <b>Sizning bugungi menyuingiz bo'yicha tavsiya:</b>\n` +
              `• Rejangizdagi tushlik: <b>${ctx.todayMenu.lunch}</b>.\n` +
              `• Hozirgi vazningiz ${ctx.currentWeight} va maqsadingiz ${ctx.targetWeight}.\n` +
              `• Ushbu tushlik sizning kunlik ${ctx.calorieTarget} me'yoringizga to'liq muvofiq keladi. Yoniga ko'katlar va yangi sabzavotlar qo'shishingizni tavsiya qilaman!`;
     }
 
-    if (lower.includes('ochlik') || lower.includes('och qoldim') || lower.includes('ishtaha')) {
+    if (lower.includes('ochlik') || lower.includes('och qoldim') || lower.includes('ishtaha') || lower.includes('очлик') || lower.includes('иштаҳа')) {
       return `⚡ <b>Ochlik hissini yengish bo'yicha 3 ta ilmiy usul:</b>\n` +
              `1. <b>Katta stakan iliq suv:</b> Ko'pincha miya suvsizlanishni ochlik bilan adashtiradi. 250-300 ml suv ichib, 10 daqiqa kuting.\n` +
              `2. <b>Kletchatka va oqsil:</b> 1 dona qaynatilgan tuxum oqi yoki yangi bodring iste'mol qiling — bu oshqozonni to'ldiradi va yog' hosil qilmaydi.\n` +
              `3. <b>Ko'k choy:</b> Issiq ko'k choy ishtahani tabiiy ravishda pasaytiradi.`;
     }
 
-    if (lower.includes('kechki') || lower.includes('kechasi') || lower.includes('20:00')) {
+    if (lower.includes('kechki') || lower.includes('kechasi') || lower.includes('20:00') || lower.includes('кечки') || lower.includes('кечаси')) {
       return `🌙 <b>Kechki ovqat qoidalari:</b>\n` +
              `• Rejangizdagi kechki taom: <b>${ctx.todayMenu.dinner}</b> (juda to'g'ri tanlov, yengil va oqsilli).\n` +
              `• Kechki 20:00 dan keyin qorin ochsa: 1 stakan yog'siz qatiq yoki 1 dona bodring yeyish mumkin. Qattiq och uxlash stress gormonlarini oshirib, ertasi kuni ortiqcha yeb qo'yishga sabab bo'ladi.`;
     }
 
-    if (lower.includes('to\'y') || lower.includes('mehmon') || lower.includes('restoran')) {
+    if (lower.includes('to\'y') || lower.includes('mehmon') || lower.includes('restoran') || lower.includes('тўй') || lower.includes('меҳмон')) {
       return `🍗 <b>To'y va mehmondorchilikda ortiqcha vazn olmaslik siri:</b>\n` +
              `1. Mehmonga borishdan oldin och qolmaslik uchun uyda 1 stakan suv va olma yeb oling.\n` +
              `2. Gazli shirin ichimliklar (kola, fanta, sharbat) o'rniga faqat gazsiz suv yoki ko'k choy iching.\n` +
              `3. Dasturxondagi salatlardan mayonezsiz, yangi pomidor-bodringli Achchiq-chuchukni tanlang.\n` +
-             `4. Go'sht va ochni me'yorda (taxminan bir kaft hajmida) yeng va nonni kamaytiring.`;
+             `4. Go'sht va oshni me'yorda (taxminan bir kaft hajmida) yeng va nonni kamaytiring.`;
     }
 
-    if (lower.includes('manti') || lower.includes('somsa') || lower.includes('shashlik')) {
+    if (lower.includes('manti') || lower.includes('somsa') || lower.includes('shashlik') || lower.includes('манти') || lower.includes('сомса') || lower.includes('шашлик')) {
       return `🥟 <b>Milliy taomlar balansi:</b>\n` +
              `• Bug'da pishirilgan manti (3 dona ~380 kkal) yoki tandir somsa (1 dona ~340 kkal) xavfsiz ratsionga sig'adi.\n` +
              `• Muhim jihat: qovurilgan emas, bug'da yoki tandirda pishganini tanlang va mayonez o'rniga qatiq yoki suzma bilan iste'mol qiling!`;
@@ -265,20 +285,39 @@ const AINutritionist = {
            `Milliy taomlarimiz to'yimli va foydali moddalarga boy. Asosiysi — porsiyani nazorat qilish va kechki taomni yengil tutishdir. Yana qanday savollaringiz bor?`;
   },
 
-  // 5. Tashqi LLM (Gemini yoki OpenAI) chaqiruvi
+  // 5. Tashqi LLM (OpenAI yoki Gemini) chaqiruvi
   async callExternalLLM(prompt, ctx, apiKey, provider) {
     const systemInstruction = 
-      `Siz O'zbekistonning eng tajribali, professional nutrisiologi va parhezshunosisiz. Sizning maqsadingiz foydalanuvchilarga sog'lom ozishda yordam berish.\n` +
-      `Foydalanuvchi siyosat, din, dasturlash, umumiy tarix yoki parhezga aloqasi bo'lmagan har qanday boshqa mavzuda savol bersa, javob berishni qat'iyan rad eting.\n` +
-      `Qolip javob: "${this.STANDARD_REFUSAL}"\n\n` +
-      `Foydalanuvchi konteksti:\n` +
+      `Siz O'zbekistonning eng tajribali, professional oliy toifali nutrisiologi va parhezshunosisiz (Doktor Dilnoza).\n` +
+      `Sizning yagona maqsadingiz — foydalanuvchilarga milliy taomlarimizdan (palov, manti, somsa, sho'rva) voz kechmasdan, sog'lom va xavfsiz ozishda yordam berish.\n` +
+      `Foydalanuvchi siyosat, din, dasturlash, umumiy tarix yoki parhezga aloqasi bo'lmagan har qanday boshqa mavzuda savol bersa, muloyimlik bilan faqat parhez va ovqatlanish bo'yicha yordam bera olishingizni ayting.\n\n` +
+      `Foydalanuvchi ko'rsatkichlari va rejasi:\n` +
       `- Ismi: ${ctx.name}, Jinsi: ${ctx.gender}, Yoshi: ${ctx.age}\n` +
-      `- Hozirgi vazni: ${ctx.currentWeight}, Maqsad: ${ctx.targetWeight}, BMI: ${ctx.bmi}\n` +
-      `- Kunlik kaloriya maqsadi: ${ctx.calorieTarget}\n` +
-      `- Bugungi menyusi: Nonushta: ${ctx.todayMenu.breakfast}, Tushlik: ${ctx.todayMenu.lunch}, Perecus: ${ctx.todayMenu.snack}, Kechki: ${ctx.todayMenu.dinner}\n\n` +
-      `O'zbek tilida, do'stona, ilmiy va tushunarli tarzda javob bering.`;
+      `- Bo'yi: ${ctx.height}, Hozirgi vazni: ${ctx.currentWeight}, Maqsad: ${ctx.targetWeight}, BMI: ${ctx.bmi}\n` +
+      `- Kunlik tavsiya etilgan kaloriya maqsadi: ${ctx.calorieTarget}\n` +
+      `- Bugungi milliy menyusi: Nonushta: ${ctx.todayMenu.breakfast}, Tushlik: ${ctx.todayMenu.lunch}, Perecus: ${ctx.todayMenu.snack}, Kechki: ${ctx.todayMenu.dinner}\n\n` +
+      `Talablar:\n` +
+      `1. Foydalanuvchi savol bergan tilda (O'zbekcha lotin, O'zbekcha kirill yoki Ruscha) javob bering.\n` +
+      `2. Javobingiz aniq, do'stona, ilmiy asoslangan va amaliy bo'lsin. Kaloriya, oqsil, yog', uglevodlar va porsiya me'yorlarini aniq keltiring.\n` +
+      `3. Formatlash uchun <b>...</b>, <i>...</i>, punktlar (•) va emojilardan chiroyli foydalaning.`;
 
     if (provider === 'openai') {
+      // Oxirgi suhbat kontekstini yig'ish (Multi-turn dialog)
+      let recentMessages = [];
+      try {
+        const history = JSON.parse(localStorage.getItem('muvozanat_ai_history') || '[]');
+        recentMessages = history.slice(-6).map(item => ({
+          role: item.sender === 'user' ? 'user' : 'assistant',
+          content: item.text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+        }));
+      } catch (e) {}
+
+      const messagesPayload = [
+        { role: 'system', content: systemInstruction },
+        ...recentMessages,
+        { role: 'user', content: prompt }
+      ];
+
       const res = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -287,16 +326,30 @@ const AINutritionist = {
         },
         body: JSON.stringify({
           model: 'gpt-4o-mini',
-          messages: [
-            { role: 'system', content: systemInstruction },
-            { role: 'user', content: prompt }
-          ],
+          messages: messagesPayload,
           temperature: 0.7,
-          max_tokens: 500
+          max_tokens: 650
         })
       });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        console.error("OpenAI API Xatosi:", res.status, errJson);
+        throw new Error(errJson?.error?.message || `OpenAI status: ${res.status}`);
+      }
+
       const data = await res.json();
-      return data?.choices?.[0]?.message?.content;
+      const rawText = data?.choices?.[0]?.message?.content;
+      if (!rawText) throw new Error("OpenAI bo'sh javob qaytardi");
+
+      // Markdown formatlashni HTML formatlashga o'tkazish
+      let formatted = rawText
+        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+        .replace(/\*(.*?)\*/g, '<i>$1</i>')
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+
+      return formatted;
     } else {
       // Gemini API
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
