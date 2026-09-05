@@ -47,9 +47,9 @@
 
         <!-- Guest Navigation Controls (When not logged in) -->
         <div id="guestNavActions" style="display: flex; gap: 8px; align-items: center;">
-          <a href="https://t.me/muvozanat24_bot" target="_blank" class="btn-telegram-header" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; font-size: 0.85rem; background: linear-gradient(135deg, #0088cc 0%, #006699 100%); color: white; border-radius: var(--radius-sm); text-decoration: none; font-weight: 600; box-shadow: 0 2px 8px rgba(0, 136, 204, 0.25);" title="Telegram Botimiz (@muvozanat24_bot)">
-            ✈️ <span>@muvozanat24_bot</span>
-          </a>
+          <button class="btn-premium-gold" style="padding: 7px 14px; font-size: 0.85rem;" title="Premium Obuna & Telegram Bot" onclick="App.openPremiumModal()">
+            👑 <span data-i18n="btn_premium">Premium</span>
+          </button>
           <button class="btn-secondary" style="padding: 7px 14px; font-size: 0.85rem;" onclick="App.openAuthModal('login')">
             🔑 <span>Kirish</span>
           </button>
@@ -64,17 +64,12 @@
             👤 <span id="navUserName">Foydalanuvchi</span>
           </div>
 
-          <!-- Telegram Bot Quick Access -->
-          <a href="https://t.me/muvozanat24_bot" target="_blank" class="btn-telegram-header" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 0.85rem; background: #0088cc; color: white; border-radius: var(--radius-sm); text-decoration: none; font-weight: 600;" title="Telegram Botimiz (@muvozanat24_bot)">
-            ✈️ <span>Bot</span>
-          </a>
-
           <!-- AI Scanner Button -->
           <button id="scannerNavBtn" class="btn-primary" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 0.85rem;" title="Taom yoki Barcode skanerlash" onclick="FoodScanner.openModal()">
             📷 <span>AI Scanner</span>
           </button>
 
-          <!-- Premium Button -->
+          <!-- Premium Button (Only bridge to Telegram Bot) -->
           <button id="premiumNavBtn" class="btn-premium-gold" style="padding: 7px 12px; font-size: 0.85rem;" title="Premium Obuna & Telegram Bot" onclick="App.openPremiumModal()">
             👑 <span data-i18n="btn_premium">Premium</span>
           </button>
@@ -112,9 +107,9 @@
           <button class="btn-primary btn-open-onboarding" data-i18n="btn_start_free">
             🚀 Bepul boshlash
           </button>
-          <a href="https://t.me/muvozanat24_bot" target="_blank" class="btn-hero-telegram" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; font-size: 0.95rem; font-weight: 700; background: linear-gradient(135deg, #0088cc 0%, #0077b5 100%); color: #fff; border-radius: var(--radius-sm); text-decoration: none; box-shadow: 0 4px 14px rgba(0, 136, 204, 0.35); transition: transform 0.2s, box-shadow 0.2s;">
-            ✈️ <span>Telegram Bot (@muvozanat24_bot)</span>
-          </a>
+          <button class="btn-premium-gold" onclick="App.openPremiumModal()" style="padding: 12px 20px; font-size: 0.95rem; font-weight: 700;">
+            👑 <span data-i18n="btn_premium">Premium</span>
+          </button>
           <button class="btn-secondary btn-how-it-works" data-i18n="btn_how_it_works">
             ❓ Qanday ishlaydi?
           </button>
@@ -494,8 +489,8 @@
         <div class="footer-copy" data-i18n="app_tagline">Tanangizga va milliy taomingizga mos sog'lom vazn</div>
       </div>
       <div class="footer-links" style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
-        <a href="https://t.me/muvozanat24_bot" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; color: #0088cc; font-weight: 700; text-decoration: none;">
-          ✈️ @muvozanat24_bot
+        <a href="javascript:void(0)" onclick="App.openPremiumModal()" style="display: inline-flex; align-items: center; gap: 6px; color: #D97706; font-weight: 700; text-decoration: none;">
+          👑 Premium
         </a>
         <a href="https://www.jmir.org/2025/1/e66887/" target="_blank" rel="noopener">JMIR (2025)</a>
         <a href="https://academic.oup.com/tbm/article-abstract/13/3/140/6998493" target="_blank" rel="noopener">TBM (2023)</a>
@@ -1032,9 +1027,6 @@
           <button type="button" class="scanner-tab-btn" id="authTabBtnRegister" onclick="App.switchAuthTab('register')">
             📝 Ro'yxatdan o'tish
           </button>
-          <button type="button" class="scanner-tab-btn" id="authTabBtnTelegram" onclick="App.switchAuthTab('telegram')">
-            📱 Telegram
-          </button>
         </div>
 
         <!-- Tab 1: Login Form -->
@@ -1078,18 +1070,6 @@
             Ro'yxatdan o'tish ➔
           </button>
         </form>
-
-        <!-- Tab 3: Telegram Login -->
-        <div id="telegramAuthTab" style="display: none; text-align: center; padding: 10px 0;">
-          <div style="font-size: 2.8rem; margin-bottom: 8px;">🤖</div>
-          <h4 style="margin-bottom: 6px;">Telegram Bot orqali avtomatik kirish</h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
-            Rasmiy botimiz <b>@muvozanat24_bot</b> ga o'tib, «/start» tugmasini bosing. Sizga bir martalik xavfsiz kirish havolasi beriladi.
-          </p>
-          <a href="https://t.me/muvozanat24_bot?start=auth_web" target="_blank" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 12px 24px; font-size: 0.95rem; background: #0088cc;">
-            ✈️ Telegram Botni ochish
-          </a>
-        </div>
       </div>
     </div>
   </div>
@@ -1290,12 +1270,6 @@
   <!-- =========================================================================
        AI-NUTRISIOLOG FLOATING CHAT WIDGET
        ========================================================================= -->
-  <!-- Floating Telegram Bot Button -->
-  <a href="https://t.me/muvozanat24_bot" target="_blank" class="telegram-float-btn" id="telegramFloatBtn" title="24/7 Telegram Botimiz (@muvozanat24_bot) ga o'tish">
-    <span class="tg-float-icon">✈️</span>
-    <span class="tg-float-text">@muvozanat24_bot</span>
-    <span class="tg-online-dot"></span>
-  </a>
 
   <!-- Floating Trigger Button -->
   <button class="ai-chat-trigger-btn" id="aiChatTriggerBtn" onclick="AINutritionist.toggleWidget()" title="AI-Nutrisiolog bilan suhbat">
@@ -1329,7 +1303,7 @@
       <button class="ai-chip-btn" onclick="AINutritionist.sendQuickReply('Ochlik hissini qanday yengaman?')">⚡ Ochlik hissi?</button>
       <button class="ai-chip-btn" onclick="AINutritionist.sendQuickReply('Bugun tushlikka nima yesam bo\'ladi?')">🥗 Bugungi tushlik?</button>
       <button class="ai-chip-btn" onclick="AINutritionist.sendQuickReply('Kechki ovqatni qanday yengillashtiray?')">🌙 Kechki ovqat?</button>
-      <a href="https://t.me/muvozanat24_bot" target="_blank" class="ai-chip-btn" style="background: #E0F2FE; color: #0284C7; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">✈️ Telegram Bot (@muvozanat24_bot)</a>
+      <button class="ai-chip-btn" onclick="AINutritionist.sendQuickReply('To\'yda nima yeyish kerak?')">🍗 To'yda nima yey?</button>
     </div>
 
     <!-- Messages Area -->

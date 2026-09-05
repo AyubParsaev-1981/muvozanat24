@@ -90,7 +90,7 @@ def get_main_keyboard():
     btn_bmi = types.KeyboardButton("⚖️ Вазн ва BMI ҳисоблаш")
     btn_water = types.KeyboardButton("💧 Сув назорати")
     btn_ai = types.KeyboardButton("🤖 AI Диетолог маслаҳати")
-    btn_web = types.KeyboardButton("🌐 Веб-сайтни очиш")
+    btn_web = types.KeyboardButton("🌐 Веб-сайтни очиш", web_app=types.WebAppInfo(url=LIVE_SITE_URL))
     btn_premium = types.KeyboardButton("👑 Premium мақоми")
     markup.add(btn_scan, btn_diary)
     markup.add(btn_menu, btn_swap)
@@ -152,10 +152,23 @@ def send_welcome(message):
 
     welcome_text += (
         f"💡 <i>Асосий ғоямиз: «Озиш учун ўзбек ошидан воз кечиш шарт эмас — порция ва кунлик рационни тўғри бошқариш кифоя!»</i>\n\n"
-        f"Қуйидаги тугмалардан бирини танланг:"
+        f"Қуйидаги менюдан керакли бўлимни танланг ёки сайтимизга ўтинг:"
     )
 
     bot.send_message(message.chat.id, welcome_text, reply_markup=get_main_keyboard())
+
+    # Send direct interactive website transition buttons
+    site_card = types.InlineKeyboardMarkup(row_width=1)
+    btn_mini = types.InlineKeyboardButton("🌐 Веб-сайтга ўтиш (Telegram Mini App)", web_app=types.WebAppInfo(url=LIVE_SITE_URL))
+    btn_link = types.InlineKeyboardButton("🚀 Браузерда тўғридан-тўғри очиш", url=LIVE_SITE_URL)
+    site_card.add(btn_mini, btn_link)
+
+    bot.send_message(
+        message.chat.id,
+        "✨ <b>«Мувозанат 24» онлайн платформаси:</b>\n"
+        "Интерактив калория калькулятори, вазн графиги ва 7 кунлик таомномани веб-сайт орқали ҳам кўришингиз мумкин:",
+        reply_markup=site_card
+    )
 
 # ==============================================================================
 # MENU HANDLER (National 4-Meal Plan)
@@ -361,13 +374,18 @@ def send_ai_advisor(message):
 # WEB PLATFORM LINK
 # ==============================================================================
 
-@bot.message_handler(func=lambda msg: msg.text == "🌐 Веб-сайтни очиш")
+@bot.message_handler(commands=['site', 'web', 'sayt', 'website', 'platforma'])
+@bot.message_handler(func=lambda msg: msg.text and any(w in msg.text.lower() for w in ['веб-сайтни очиш', 'веб-сайт', 'веб сайт', 'veb-sayt', 'saytni ochish', 'sayt', 'сайт']))
 def send_web_link(message):
     text = (
-        "🌐 <b>«Мувозанат 24» веб-платформаси:</b>\n\n"
-        "Сайтда сиз тўлиқ 7 кунлик миллий таомномани, интерактив SVG вазн графигини, "
-        "AI озиқ-овқат сканерини, харидлар рўйхатини ва шахсий калория калькуляторини кўришингиз мумкин.\n\n"
-        "👇 Сайтимизни очиш учун тугмалардан бирини танланг:"
+        "🌐 <b>«Мувозанат 24» рақамли платформаси:</b>\n\n"
+        "Веб-сайтимиз орқали қуйидаги барча имкониятлардан тўлиқ фойдаланишингиз мумкин:\n"
+        "• 🥗 <b>7 кунлик миллий таомнома</b> — ҳар бир кун ва порция ҳисобланган\n"
+        "• 📈 <b>Интерактив вазн графиги</b> — динамика ва BMI нормаллашуви\n"
+        "• 📷 <b>AI Таом ва Barcode сканери</b> — таом расмидан калорияни аниқлаш\n"
+        "• 🛒 <b>Ҳафталик харидлар рўйхати</b> (Shopping list)\n"
+        "• ⚖️ <b>Шахсий калория дефицити</b> ва сув баланси калькулятори\n\n"
+        "👇 <b>Сайтни очиш учун қуйидаги тугмалардан бирини танланг:</b>"
     )
 
     markup = types.InlineKeyboardMarkup(row_width=1)
@@ -984,6 +1002,20 @@ def process_weight_step(message):
 if __name__ == '__main__':
     logger.info("Muvozanat Telegram Bot (@muvozanat24_bot) is starting polling...")
     print(">>> @muvozanat24_bot is actively running!")
+
+    # Set persistent Telegram Chat Menu Button to open website platform
+    try:
+        bot.set_chat_menu_button(
+            menu_button=types.MenuButtonWebApp(
+                type="web_app",
+                text="🌐 Veb-sayt",
+                web_app=types.WebAppInfo(url=LIVE_SITE_URL)
+            )
+        )
+        logger.info("Chat menu button configured successfully.")
+    except Exception as e:
+        logger.warning(f"Could not set chat menu button: {e}")
+
     try:
         bot.infinity_polling(timeout=20, long_polling_timeout=10)
     except Exception as e:
