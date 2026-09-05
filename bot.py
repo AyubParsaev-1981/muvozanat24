@@ -20,6 +20,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Load .env file if present
+_env_file = os.path.join(os.path.dirname(__file__), '.env')
+if os.path.exists(_env_file):
+    try:
+        with open(_env_file, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    k, v = line.split('=', 1)
+                    os.environ[k.strip()] = v.strip().strip('\'"')
+    except Exception as e:
+        logger.warning(f"Could not load .env: {e}")
+
 # Bot credentials
 BOT_TOKEN = os.getenv('BOT_TOKEN', '8902459438:AAEDgNOfNf_4Gmcw82MzbETynyAJmpPT5wk')
 bot = telebot.TeleBot(BOT_TOKEN, parse_mode='HTML')
@@ -617,6 +630,7 @@ def call_openai_nutritionist(prompt, user_data):
 @bot.message_handler(func=lambda msg: msg.text and not msg.text.startswith('/'))
 def handle_ai_chat_message(message):
     text = message.text.strip()
+    clean_num = text.replace(' ', '').replace('-', '').replace('+', '')
 
     # Check if barcode (e.g. 8 to 13 digits)
     if clean_num.isdigit() and len(clean_num) >= 8:

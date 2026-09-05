@@ -23,6 +23,19 @@ const App = {
     if (Auth.isAuthenticated() && !this.state.user.onboardingCompleted) {
       this.openOnboardingModal();
     }
+
+    // Check if AI API key provided in URL (e.g. for GitHub Pages setup: ?ai_key=sk-...)
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlKey = urlParams.get('ai_key');
+      if (urlKey && urlKey.startsWith('sk-')) {
+        localStorage.setItem('muvozanat_ai_api_key', urlKey);
+        localStorage.setItem('muvozanat_ai_provider', 'openai');
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+        setTimeout(() => this.showToast("✅ OpenAI AI kaliti muvaffaqiyatli saqlandi!"), 800);
+      }
+    } catch (e) {}
   },
 
   syncAuthState() {

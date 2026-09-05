@@ -190,7 +190,7 @@ const AINutritionist = {
 
     // Kontekst
     const ctx = this.getUserContext();
-    const apiKey = localStorage.getItem('muvozanat_ai_api_key') || this.DEFAULT_OPENAI_KEY;
+    const apiKey = localStorage.getItem('muvozanat_ai_api_key') || (window.MUVOZANAT_CONFIG && window.MUVOZANAT_CONFIG.OPENAI_API_KEY) || this.DEFAULT_OPENAI_KEY;
     const apiProvider = localStorage.getItem('muvozanat_ai_provider') || 'openai';
 
     // OpenAI yoki Gemini API chaqiruvi

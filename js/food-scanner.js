@@ -457,8 +457,9 @@ const FoodScanner = {
       `  "nutrition_tip": "Yog'sizroq likopchani tanlab, ko'proq achchiq-chuchuk salat bilan iste'mol qiling!"\n` +
       `}`;
 
+    const activeKey = localStorage.getItem('muvozanat_ai_api_key') || (window.MUVOZANAT_CONFIG && window.MUVOZANAT_CONFIG.OPENAI_API_KEY) || this.OPENAI_API_KEY;
     const headers = {
-      'Authorization': `Bearer ${this.OPENAI_API_KEY}`,
+      'Authorization': `Bearer ${activeKey}`,
       'Content-Type': 'application/json'
     };
 

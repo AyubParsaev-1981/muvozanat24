@@ -3,12 +3,17 @@
     "water_glasses": 0,
     "name": "Ayubkhon",
     "phone": "+998997249026",
-    "is_registered": false,
+    "is_registered": true,
     "is_premium": true,
-    "weight": null,
+    "weight": 96.0,
     "height": 175,
-    "target_weight": null,
-    "weight_history": [],
+    "target_weight": 86.4,
+    "weight_history": [
+      {
+        "date": "2026-09-05",
+        "weight": 96.0
+      }
+    ],
     "consumed_today": 0
   }
 }
