@@ -1,1 +1,14 @@
-{}
+{
+  "233556019": {
+    "water_glasses": 0,
+    "name": "Ayubkhon",
+    "phone": "+998997249026",
+    "is_registered": false,
+    "is_premium": true,
+    "weight": null,
+    "height": 175,
+    "target_weight": null,
+    "weight_history": [],
+    "consumed_today": 0
+  }
+}

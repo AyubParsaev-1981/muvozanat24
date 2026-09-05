@@ -1846,6 +1846,54 @@ input, select, textarea {
    AI-NUTRISIOLOG CHAT WIDGET STYLES
    ========================================================================== */
 
+/* Floating Telegram Bot Button */
+.telegram-float-btn {
+  position: fixed;
+  bottom: 86px;
+  right: 28px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition-normal);
+}
+
+.telegram-float-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(0, 136, 204, 0.55);
+  color: #FFFFFF;
+}
+
+.tg-float-icon {
+  font-size: 1.1rem;
+}
+
+.tg-online-dot {
+  width: 8px;
+  height: 8px;
+  background: #22C55E;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #22C55E;
+}
+
+@media (max-width: 991px) {
+  .telegram-float-btn {
+    bottom: 126px;
+    right: 16px;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+}
+
 /* Floating Chat Trigger Button */
 .ai-chat-trigger-btn {
   position: fixed;

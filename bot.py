@@ -21,8 +21,12 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Bot credentials
-BOT_TOKEN = '8902459438:AAEDgNOfNf_4Gmcw82MzbETynyAJmpPT5wk'
+BOT_TOKEN = os.getenv('BOT_TOKEN', '8902459438:AAEDgNOfNf_4Gmcw82MzbETynyAJmpPT5wk')
 bot = telebot.TeleBot(BOT_TOKEN, parse_mode='HTML')
+
+# Website Platform URLs
+LIVE_SITE_URL = os.getenv('LIVE_SITE_URL', 'https://ayubparsaev-1981.github.io/muvozanat24/')
+LOCAL_SITE_URL = os.getenv('LOCAL_SITE_URL', 'http://localhost:8080')
 
 # Storage file for user data
 DATA_FILE = os.path.join(os.path.dirname(__file__), 'bot_users.json')
@@ -91,14 +95,31 @@ def send_welcome(message):
     user_id = str(message.from_user.id)
     user_data = get_user_data(user_id)
 
-    # Check if registered via web start parameter: /start reg_901234567
+    # Check if registered via web start parameter: /start reg_901234567, /start auth_web, /start premium
     args = message.text.split()
     phone_from_web = None
-    if len(args) > 1 and args[1].startswith('reg_'):
-        phone_from_web = args[1].replace('reg_', '')
-        user_data['phone'] = f"+998{phone_from_web}"
-        user_data['is_premium'] = True
-        save_users(users_db)
+    extra_msg = ""
+    if len(args) > 1:
+        param = args[1]
+        if param.startswith('reg_'):
+            phone_from_web = param.replace('reg_', '')
+            user_data['phone'] = f"+998{phone_from_web}"
+            user_data['is_premium'] = True
+            save_users(users_db)
+        elif param == 'auth_web':
+            auth_code = str(abs(hash(user_id)))[:6]
+            extra_msg = (
+                f"\n🔐 <b>Сайтга кириш тасдиқланди!</b>\n"
+                f"Сиз Telegram орқали тизимга муваффақиятли уландингиз.\n"
+                f"Бир марталик тасдиқлаш кодингиз: <code>{auth_code}</code>\n"
+            )
+        elif param == 'premium':
+            user_data['is_premium'] = True
+            save_users(users_db)
+            extra_msg = (
+                f"\n👑 <b>«Muvozanat 24» Premium мақоми очилди!</b>\n"
+                f"Сизга 24/7 шахсий нутрициолог, кунлик миллий озиш менюси ва барча функциялар тўлиқ очилди.\n"
+            )
 
     first_name = message.from_user.first_name or "Азиз фойдаланувчи"
     user_data['name'] = first_name
@@ -106,13 +127,15 @@ def send_welcome(message):
 
     welcome_text = (
         f"👋 <b>Ассалому алайкум, {first_name}!</b>\n\n"
-        f"<b>«Мувозанат» (Muvozanat)</b> — миллий таомлардан воз кечмасдан, "
+        f"<b>«Мувозанат» (Muvozanat 24)</b> — миллий таомлардан воз кечмасдан, "
         f"тана вазнини хавфсиз нормаллаштириш бўйича шахсий рақамли ёрдамчингизга хуш келибсиз!\n\n"
         f"👑 <b>Сизнинг Premium мақомингиз фаоллаштирилди.</b>\n"
     )
 
     if phone_from_web:
         welcome_text += f"📱 Рўйхатдан ўтган рақам: <b>+998 {phone_from_web}</b>\n\n"
+    if extra_msg:
+        welcome_text += f"{extra_msg}\n"
 
     welcome_text += (
         f"💡 <i>Асосий ғоямиз: «Озиш учун ўзбек ошидан воз кечиш шарт эмас — порция ва кунлик рационни тўғри бошқариш кифоя!»</i>\n\n"
@@ -328,15 +351,17 @@ def send_ai_advisor(message):
 @bot.message_handler(func=lambda msg: msg.text == "🌐 Веб-сайтни очиш")
 def send_web_link(message):
     text = (
-        "🌐 <b>«Мувозанат» веб-платформаси:</b>\n\n"
+        "🌐 <b>«Мувозанат 24» веб-платформаси:</b>\n\n"
         "Сайтда сиз тўлиқ 7 кунлик миллий таомномани, интерактив SVG вазн графигини, "
-        "харидлар рўйхатини ва шахсий калория калькуляторини кўришингиз мумкин.\n\n"
-        "👇 Веб-сайтга ўтиш учун босинг:"
+        "AI озиқ-овқат сканерини, харидлар рўйхатини ва шахсий калория калькуляторини кўришингиз мумкин.\n\n"
+        "👇 Сайтимизни очиш учун тугмалардан бирини танланг:"
     )
 
-    markup = types.InlineKeyboardMarkup()
-    btn = types.InlineKeyboardButton("🚀 Веб-сайтни очиш (Local/Web)", url="http://localhost:8080")
-    markup.add(btn)
+    markup = types.InlineKeyboardMarkup(row_width=1)
+    btn_mini_app = types.InlineKeyboardButton("📱 Telegram ичида очиш (Mini App)", web_app=types.WebAppInfo(url=LIVE_SITE_URL))
+    btn_live = types.InlineKeyboardButton("🌐 Расмий веб-сайт (GitHub Pages)", url=LIVE_SITE_URL)
+    btn_local = types.InlineKeyboardButton("💻 Маҳаллий серверда очиш (Localhost)", url=LOCAL_SITE_URL)
+    markup.add(btn_mini_app, btn_live, btn_local)
 
     bot.send_message(message.chat.id, text, reply_markup=markup)
 
