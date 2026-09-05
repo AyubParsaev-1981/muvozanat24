@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muvozanat — O'z milliy taomlaringiz bilan sog'lom vaznga erishing</title>
+  <meta name="description" content="O'zbekiston va Markaziy Osiyo milliy taomlaridan воз кечмасдан, порция ва рационни тўғри бошқариб тана вазнини хавфсиз нормаллаштириш рақамли платформаси.">
+  
+  <!-- Modern Clean Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥗</text></svg>">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand-logo-group" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <div class="brand-symbol">M</div>
+        <div>
+          <span class="brand-title" data-i18n="app_name">Muvozanat</span>
+          <span class="brand-badge">PRO</span>
+        </div>
+      </div>
+
+      <nav class="nav-links-desktop">
+        <a href="#dashboardSection" class="nav-link active" data-target="dashboardSection" data-i18n="nav_home">Bosh sahifa</a>
+        <a href="#mealPlanSection" class="nav-link" data-target="mealPlanSection" data-i18n="nav_menu">Menyu</a>
+        <a href="#weightSection" class="nav-link" data-target="weightSection" data-i18n="nav_progress">Natijalar</a>
+        <a href="javascript:void(0)" class="nav-link" id="shoppingListBtn" data-i18n="nav_shopping">Xaridlar</a>
+        <a href="#privacySection" class="nav-link" data-target="privacySection" data-i18n="nav_profile">Profil / GDPR</a>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Language Selector -->
+        <div class="lang-select-wrapper">
+          <select id="langSelect" aria-label="Tilni tanlang">
+            <option value="uz-Latn">O'zbek (Lotin)</option>
+            <option value="uz-Cyrl">Ўзбекча (Кирилл)</option>
+            <option value="ru">Русский</option>
+          </select>
+        </div>
+
+        <!-- Guest Navigation Controls (When not logged in) -->
+        <div id="guestNavActions" style="display: flex; gap: 8px; align-items: center;">
+          <button class="btn-secondary" style="padding: 7px 14px; font-size: 0.85rem;" onclick="App.openAuthModal('login')">
+            🔑 <span>Kirish</span>
+          </button>
+          <button class="btn-primary" style="padding: 7px 16px; font-size: 0.85rem;" onclick="App.openAuthModal('register')">
+            📝 <span>Ro'yxatdan o'tish</span>
+          </button>
+        </div>
+
+        <!-- Authenticated User Navigation Controls (When logged in) -->
+        <div id="userNavActions" style="display: none; gap: 8px; align-items: center;">
+          <div class="user-pill-badge" id="navUserBadge" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #F3F4F6; border-radius: 99px; font-weight: 700; font-size: 0.85rem; color: #1F2937;">
+            👤 <span id="navUserName">Foydalanuvchi</span>
+          </div>
+
+          <!-- AI Scanner Button -->
+          <button id="scannerNavBtn" class="btn-primary" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 0.85rem;" title="Taom yoki Barcode skanerlash" onclick="FoodScanner.openModal()">
+            📷 <span>AI Scanner</span>
+          </button>
+
+          <!-- Premium Button -->
+          <button id="premiumNavBtn" class="btn-premium-gold" style="padding: 7px 12px; font-size: 0.85rem;" title="Premium Obuna & Telegram Bot" onclick="App.openPremiumModal()">
+            👑 <span data-i18n="btn_premium">Premium</span>
+          </button>
+
+          <!-- Admin CMS Toggle -->
+          <button id="adminToggleBtn" class="btn-header-admin" style="display: none; padding: 7px 12px; font-size: 0.85rem;" title="Boshqaruv Paneli (Admin CMS)">
+            ⚙️ <span data-i18n="nav_admin">Admin</span>
+          </button>
+
+          <!-- Logout Button -->
+          <button class="btn-secondary" style="padding: 7px 12px; font-size: 0.85rem;" title="Chiqish (Logout)" onclick="Auth.logout()">
+            🚪 <span>Chiqish</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero / Landing Section -->
+  <section class="hero-section" id="heroSection">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-badge-pill">
+          <span>🔬</span>
+          <span data-i18n="hero_badge_science">JMIR & TBM ilmiy tadqiqotlari asosida</span>
+        </div>
+        <h1 class="hero-title" data-i18n="hero_title">
+          O'z milliy oshxonangizdan voz kechmasdan sog'lom vaznga erishing
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero_subtitle">
+          Osh, manti va somsani taqiqlamaymiz! Ilmiy asoslangan raqamli balans, aqlli porsiya va shaxsiy tavsiyalar orqali vazningizni xavfsiz boshqaring.
+        </p>
+
+        <div class="hero-cta-group">
+          <button class="btn-primary btn-open-onboarding" data-i18n="btn_start_free">
+            🚀 Bepul boshlash
+          </button>
+          <button class="btn-secondary btn-how-it-works" data-i18n="btn_how_it_works">
+            ❓ Qanday ishlaydi?
+          </button>
+        </div>
+
+        <div class="hero-stats-row">
+          <div class="hero-stat-item">
+            <span class="stat-value" data-i18n="hero_stat_1_val">100%</span>
+            <span class="stat-label" data-i18n="hero_stat_1_lbl">Milliy taomlarga moslashgan</span>
+          </div>
+          <div class="hero-stat-item">
+            <span class="stat-value" data-i18n="hero_stat_2_val">-0.5-0.7 kg</span>
+            <span class="stat-label" data-i18n="hero_stat_2_lbl">Haftalik xavfsiz sur'at</span>
+          </div>
+          <div class="hero-stat-item">
+            <span class="stat-value" data-i18n="hero_stat_3_val">0 taqiq</span>
+            <span class="stat-label" data-i18n="hero_stat_3_lbl">Qat'iy stressli parhezsiz</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Visual Showcase -->
+      <div class="hero-visual-card">
+        <div class="hero-visual-header">
+          <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary);">🇺🇿 O'zbekiston Milliy Menyusi</span>
+          <span class="visual-macro-pill">580 kkal • Halol</span>
+        </div>
+        <div class="hero-visual-image-wrap">
+          <img src="assets/images/plov.jpg" alt="Toshkent to'y oshi" class="hero-visual-image">
+          <span class="hero-visual-badge">Smart Adaptation Faol</span>
+        </div>
+        <div class="hero-visual-dish-info">
+          <div>
+            <h4 class="visual-dish-name">Toshkent to'y oshi (Plov)</h4>
+            <p class="visual-dish-portion">Tushlik porsiyasi: 250 g | Oqsil: 22g | Yog': 26g</p>
+          </div>
+          <button class="btn-dish-action btn-dish-swap" onclick="App.openSwapModal('mon', 'lunch')">
+            Almashtirish 🔄
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 Core Pillars Section (Section 2, 4, 37) -->
+  <section class="pillars-section" id="pillarsSection">
+    <div class="container">
+      <div class="section-header-centered">
+        <h2 data-i18n="pillar_title">Nega aynan Muvozanat?</h2>
+        <p>Biz vazn boshqarishni cheklovlar emas, balki qulaylik va madaniy moslashuv asosiga quramiz.</p>
+      </div>
+
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-icon-box">🍲</div>
+          <h3 class="pillar-title" data-i18n="pillar_1_title">Milliy oshxona integratsiyasi</h3>
+          <p class="pillar-desc" data-i18n="pillar_1_desc">
+            O'zbekiston, Qozog'iston, Turkiya taomlari ro'yxati. O'zbek oshidan voz kechmasdan kaloriyani boshqarasiz.
+          </p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon-box warm">⚖️</div>
+          <h3 class="pillar-title" data-i18n="pillar_2_title">Smart Menu Adaptation</h3>
+          <p class="pillar-desc" data-i18n="pillar_2_desc">
+            «Bugun osh yedim» desangiz, tizim sizni jazolamaydi — kechki ovqatni avtomatik ravishda yengilroq qilib muvozanatlaydi.
+          </p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon-box info">⚡</div>
+          <h3 class="pillar-title" data-i18n="pillar_3_title">5 soniyalik sodda progress</h3>
+          <p class="pillar-desc" data-i18n="pillar_3_desc">
+            «Hozir qayerdaman? Maqsadim qayerda? Bugun nima qilishim kerak?» — murakkab jadvallarsiz aniq javob.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Public Landing Hero Banner (Section 4: No registration - no personal data) -->
+  <section class="container" id="guestLandingHero" style="margin-top: 24px; display: none;">
+    <div style="background: linear-gradient(135deg, #064E3B 0%, #065F46 100%); border-radius: var(--radius-xl); padding: 48px 32px; color: #FFFFFF; text-align: center; box-shadow: var(--shadow-xl); position: relative; overflow: hidden;">
+      <div style="display: inline-block; background: rgba(16, 185, 129, 0.25); border: 1px solid rgba(255, 255, 255, 0.2); padding: 6px 16px; border-radius: var(--radius-full); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">
+        🌿 Milliy taomlardan voz kechmasdan ozish platformasi
+      </div>
+      <h1 style="font-size: 2.4rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; max-width: 780px; margin-left: auto; margin-right: auto;">
+        Sog'lom vaznga ortiqcha cheklovlarsiz va ilmiy asosda erishing
+      </h1>
+      <p style="font-size: 1.05rem; opacity: 0.9; max-width: 640px; margin: 0 auto 28px auto; line-height: 1.6;">
+        O'zbek milliy taomlarini hisobga oluvchi, multimodal sun'iy intellekt (OpenAI Vision) va 24/7 AI-Nutrisiolog bilan qurollangan raqamli platforma.
+      </p>
+      <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+        <button class="btn-primary" style="padding: 14px 32px; font-size: 1.05rem; background: #10B981; font-weight: 800; border-radius: var(--radius-full); box-shadow: 0 10px 25px rgba(0,0,0,0.3);" onclick="App.openAuthModal('register')">
+          🚀 Bepul ro'yxatdan o'tish
+        </button>
+        <button class="btn-secondary" style="padding: 14px 28px; font-size: 1.05rem; background: rgba(255,255,255,0.15); color: #FFFFFF; border: 1.5px solid rgba(255,255,255,0.4); font-weight: 700; border-radius: var(--radius-full);" onclick="App.openAuthModal('login')">
+          🔑 Tizimga kirish
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5-Second Dashboard (Section 12 & 21) -->
+  <section class="container" id="dashboardSection">
+    <div class="dashboard-hero-card">
+      <div class="dash-top-header">
+        <div>
+          <h2 class="dash-greeting-title" id="dashGreeting">Xush kelibsiz!</h2>
+          <p class="dash-greeting-sub" id="dashSubgreeting">Shaxsiy rejangizni shakllantirish uchun profilingizni to'ldiring.</p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn-primary" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);" onclick="FoodScanner.openModal()">
+            📷 Taomni skanerlash
+          </button>
+          <button class="btn-primary" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); display: inline-flex; align-items: center; gap: 6px;" onclick="App.openFoodCatalogModal()">
+            🥗 Taom qo'shish (Baza)
+          </button>
+          <button class="btn-premium-gold" onclick="App.openPremiumModal()">
+            👑 <span data-i18n="btn_premium">Premium</span>
+          </button>
+          <button class="btn-secondary" onclick="App.openOnboardingModal()">
+            ⚙️ Profilni sozlash
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Quick KPI Ribbons -->
+      <div class="dash-metrics-ribbon">
+        <div class="ribbon-item">
+          <span class="ribbon-label" data-i18n="dash_current_weight">Hozirgi vazn</span>
+          <span class="ribbon-value" id="dashCurrentWeight">-- kg</span>
+          <span class="ribbon-delta" id="dashWeightDelta">Boshlang'ich</span>
+        </div>
+        <div class="ribbon-item">
+          <span class="ribbon-label" data-i18n="dash_target_weight">Maqsad</span>
+          <span class="ribbon-value" id="dashTargetWeight">-- kg</span>
+          <span class="ribbon-delta" style="color: var(--text-subtle);">Belgilanmagan</span>
+        </div>
+        <div class="ribbon-item">
+          <span class="ribbon-label" data-i18n="dash_remaining">Qoldi</span>
+          <span class="ribbon-value" id="dashRemainingWeight">-- kg</span>
+          <span class="ribbon-delta" style="color: #3B82F6;">Bosqichma-bosqich</span>
+        </div>
+        <div class="ribbon-item">
+          <span class="ribbon-label">Kunlik norma</span>
+          <span class="ribbon-value" id="dashCalorieTarget">-- kkal</span>
+          <span class="ribbon-delta" style="color: var(--primary);">Shaxsiy hisob</span>
+        </div>
+      </div>
+
+      <!-- Goal Progress Bar -->
+      <div class="progress-bar-container">
+        <div class="progress-bar-label-row">
+          <span id="dashProgressBarText">0% maqsadga erishildi</span>
+          <span id="dashGoalRangeText">-- kg → -- kg</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="dashProgressBarFill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Neutral BMI Disclaimer (Section 7) -->
+      <div class="bmi-disclaimer-box">
+        <span class="bmi-badge" id="dashBmiValue">BMI: 29.6</span>
+        <span class="bmi-text" id="dashBmiDisclaimer" data-i18n="bmi_neutral_disclaimer">
+          Ushbu ko'rsatkich umumiy orientir hisoblanadi va individual tibbiy baholash o'rnini bosmaydi.
+        </span>
+      </div>
+
+      <!-- Milestone notification (Section 14) -->
+      <div id="milestoneSummary" style="margin-top: 14px; font-size: 0.92rem; color: var(--text-muted);"></div>
+
+      <!-- Today's Checklist Grid ("Bugungi nazorat") -->
+      <div class="dash-today-grid">
+        <div class="checklist-card">
+          <span class="check-title" data-i18n="dash_meal_plan">Ovqatlanish rejasi</span>
+          <div class="check-value">
+            <span>82%</span>
+            <span class="check-status-icon">🥗</span>
+          </div>
+        </div>
+
+        <div class="checklist-card">
+          <span class="check-title" data-i18n="dash_water">Suv balansi</span>
+          <div class="check-value">
+            <span id="checkWaterVal">75%</span>
+            <span class="check-status-icon">💧</span>
+          </div>
+        </div>
+
+        <div class="checklist-card">
+          <span class="check-title" data-i18n="dash_steps">Qadamlar / Harakat</span>
+          <div class="check-value">
+            <span id="checkStepsVal">91%</span>
+            <span class="check-status-icon">🚶</span>
+          </div>
+        </div>
+
+        <div class="checklist-card">
+          <span class="check-title" data-i18n="dash_weight_logged">Vazn qayd etildi</span>
+          <div class="check-value">
+            <span style="color: var(--primary);">✓ Bugun</span>
+            <span class="check-status-icon">⚖️</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7-Day Meal Plan Section (Section 8, 9, 10) -->
+  <section class="container meal-plan-section" id="mealPlanSection">
+    <div class="section-heading-row" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px;">
+      <div>
+        <h2 class="section-title" data-i18n="meal_plan_title">7 kunlik milliy menyu</h2>
+        <p class="section-subtitle" data-i18n="meal_plan_subtitle">Haftaning har bir kuni uchun muvozanatlangan shaxsiy taomnoma</p>
+      </div>
+
+      <button class="btn-primary" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); display: inline-flex; align-items: center; gap: 6px; font-size: 0.88rem; padding: 10px 18px; margin-bottom: 12px;" onclick="App.openFoodCatalogModal()">
+        📚 Taomlar bazasidan tanlash (Grammlar)
+      </button>
+
+      <div class="days-tab-bar">
+        <button class="day-tab-btn active" data-day="mon" data-i18n="day_mon">Dushanba</button>
+        <button class="day-tab-btn" data-day="tue" data-i18n="day_tue">Seshanba</button>
+        <button class="day-tab-btn" data-day="wed" data-i18n="day_wed">Chorshanba</button>
+        <button class="day-tab-btn" data-day="thu" data-i18n="day_thu">Payshanba</button>
+        <button class="day-tab-btn" data-day="fri" data-i18n="day_fri">Juma</button>
+        <button class="day-tab-btn" data-day="sat" data-i18n="day_sat">Shanba</button>
+        <button class="day-tab-btn" data-day="sun" data-i18n="day_sun">Yakshanba</button>
+      </div>
+    </div>
+
+    <!-- 4 Meal Cards Grid -->
+    <div class="meals-grid" id="mealsGridContainer">
+      <!-- Populated dynamically by App.renderMealPlan() -->
+    </div>
+  </section>
+
+  <!-- Weight Tracking & Dynamic SVG Chart (Section 11) -->
+  <section class="container" id="weightSection">
+    <div class="weight-tracking-section">
+      <div class="chart-header-row">
+        <div>
+          <h2 class="section-title" data-i18n="weight_chart_title">Vazn dinamikasi va prognoz</h2>
+          <p class="section-subtitle" data-i18n="weight_chart_subtitle">Vaqt bo'yicha o'zgarish va maqsad traektoriyasi</p>
+        </div>
+
+        <form id="weightLogForm" class="weight-input-bar" style="border: none; padding: 0; margin: 0;">
+          <label for="newWeightInput" style="font-size: 0.88rem; font-weight: 600;" data-i18n="weight_input_label">Bugungi vazningizni kiriting (kg):</label>
+          <input type="number" step="0.1" min="30" max="250" id="newWeightInput" class="weight-input-field" placeholder="93.8" required>
+          <button type="submit" class="btn-primary" data-i18n="btn_add_weight">
+            Saqlash 💾
+          </button>
+        </form>
+      </div>
+
+      <!-- SVG Chart Canvas Container -->
+      <div class="chart-container-wrapper" id="weightChartContainer">
+        <!-- Rendered via WeightChart.render() -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Daily Habits: Water & Activity -->
+  <section class="container">
+    <div class="habit-tracker-row">
+      <!-- Water Tracker -->
+      <div class="habit-card">
+        <div class="habit-header">
+          <div>
+            <h3 style="font-size: 1.15rem;">💧 Suv me'yori (250 ml stakanlar)</h3>
+            <p style="font-size: 0.85rem;" id="waterCounterText">1500 / 2000 ml</p>
+          </div>
+          <span style="font-size: 1.5rem;">🥤</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-subtle);">Stakan ustiga bosib ichgan suvingizni belgilang:</p>
+        <div class="water-glasses-row" id="waterGlassesRow">
+          <!-- Populated by App.renderHabitTrackers() -->
+        </div>
+      </div>
+
+      <!-- Steps / Movement Tracker -->
+      <div class="habit-card">
+        <div class="habit-header">
+          <div>
+            <h3 style="font-size: 1.15rem;">🚶 Qadamlar va jismoniy faollik</h3>
+            <p style="font-size: 0.85rem;">Maqsad: 10,000 qadam / kun</p>
+          </div>
+          <span style="font-size: 1.5rem;">⚡</span>
+        </div>
+        <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: var(--primary);">9,100 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-subtle);">qadam</span></div>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Ofis ishi uchun ajoyib natija!</span>
+          </div>
+          <button class="btn-secondary" onclick="App.state.user.currentSteps += 500; App.saveState(); App.renderHabitTrackers(); App.showToast('+500 qadam qo\'shildi!');">
+            +500 qadam
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supportive Gamification (Section 15) -->
+  <section class="container gamification-section">
+    <div class="section-heading-row" style="margin-bottom: 16px;">
+      <div>
+        <h3 style="font-size: 1.35rem;">🏅 Sog'lom motivatsiya va yutuqlar</h3>
+        <p style="font-size: 0.9rem; color: var(--text-subtle);">Ayblashsiz, ijobiy qo'llab-quvvatlash tizimi</p>
+      </div>
+    </div>
+
+    <div class="badges-grid">
+      <div class="badge-card">
+        <div class="badge-icon-box">🏆</div>
+        <div>
+          <h4 class="badge-title" data-i18n="badge_7_days">7 kunlik muntazamlik</h4>
+          <p class="badge-desc" data-i18n="badge_7_days_desc">Bir hafta davomida vazningizni doimiy kuzatdingiz!</p>
+        </div>
+      </div>
+
+      <div class="badge-card">
+        <div class="badge-icon-box">🌟</div>
+        <div>
+          <h4 class="badge-title" data-i18n="badge_first_2kg">Dastlabki -2 kg marrasi</h4>
+          <p class="badge-desc" data-i18n="badge_first_2kg_desc">Ajoyib natija! Sog'lom odatlar o'z samarasini bermoqda.</p>
+        </div>
+      </div>
+
+      <div class="badge-card">
+        <div class="badge-icon-box">💧</div>
+        <div>
+          <h4 class="badge-title" data-i18n="badge_water_streak">Suv me'yori ustasi</h4>
+          <p class="badge-desc" data-i18n="badge_water_streak_desc">Kunlik 2 litr toza suv ichish rejasini to'ldirdingiz.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Supportive Non-Blaming Message -->
+    <div class="supportive-nudge-box">
+      <span style="font-size: 1.4rem;">💚</span>
+      <span data-i18n="supportive_nudge">
+        Bugun rejadagidan biroz ko'proq ovqatlandingizmi? Hechqisi yo'q — ertaga odatiy sog'lom rejimni davom ettirishingiz mumkin!
+      </span>
+    </div>
+  </section>
+
+  <!-- Data Privacy & Medical Notice (Section 27 & 28) -->
+  <section class="container" id="privacySection" style="margin-bottom: 30px;">
+    <div class="dashboard-hero-card" style="padding: 24px;">
+      <h3 style="font-size: 1.2rem; margin-bottom: 8px;" data-i18n="privacy_title">Ma'lumotlar xavfsizligi va Maxfiylik (GDPR)</h3>
+      <p style="font-size: 0.9rem; margin-bottom: 16px;" data-i18n="privacy_notice">
+        Barcha ma'lumotlaringiz shifrlangan holda faqat sizning qurilmangizda saqlanadi. Istalgan vaqtda yuklab olishingiz yoki butunlay o'chirib tashlashingiz mumkin.
+      </p>
+
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;">
+        <button id="exportDataBtn" class="btn-secondary" data-i18n="btn_export_data">
+          📥 Ma'lumotlarni yuklab olish (JSON)
+        </button>
+        <button id="deleteAccountBtn" class="btn-secondary" style="color: var(--color-danger); border-color: #FCA5A5;" data-i18n="btn_delete_account">
+          🗑️ Barcha ma'lumotlarimni o'chirish
+        </button>
+      </div>
+
+      <div style="font-size: 0.82rem; color: var(--text-light); line-height: 1.5; border-top: 1px solid var(--border-subtle); padding-top: 14px;" data-i18n="medical_safety_notice">
+        Xavfsizlik eslatmasi: Homiladorlik, emizish, juda past BMI yoki og'ir surunkali kasalliklarda individual reja boshlashdan oldin shifokor yoki malakali diyetolog bilan maslahatlashish tavsiya etiladi.
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="footer-brand" data-i18n="app_name">Muvozanat</div>
+        <div class="footer-copy" data-i18n="app_tagline">Tanangizga va milliy taomingizga mos sog'lom vazn</div>
+      </div>
+      <div class="footer-links">
+        <a href="https://www.jmir.org/2025/1/e66887/" target="_blank" rel="noopener">JMIR (2025)</a>
+        <a href="https://academic.oup.com/tbm/article-abstract/13/3/140/6998493" target="_blank" rel="noopener">TBM (2023)</a>
+        <a href="javascript:void(0)" onclick="App.openAdminModal()">Admin CMS</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       MODAL 1: ONBOARDING WIZARD (Section 4, 5, 6, 7)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="onboardingModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h3 data-i18n="onboard_title">Shaxsiy profilingizni sozlang</h3>
+          <p style="font-size: 0.85rem; color: var(--text-subtle);" data-i18n="onboard_subtitle">2 daqiqa ichida o'zingizga mos ovqatlanish rejasini oling</p>
+        </div>
+        <button class="btn-modal-close" onclick="App.closeModal('onboardingModal')">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="onboard-step-indicator">
+          <div class="step-dot active" id="stepDot1"></div>
+          <div class="step-dot" id="stepDot2"></div>
+          <div class="step-dot" id="stepDot3"></div>
+          <div class="step-dot" id="stepDot4"></div>
+          <div class="step-dot" id="stepDot5"></div>
+        </div>
+
+        <form id="onboardingForm">
+          <!-- Step 1: Physical Parameters -->
+          <div id="onboardStep1">
+            <h4 style="margin-bottom: 16px;" data-i18n="onboard_step1_title">Jismoniy parametrlar</h4>
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label data-i18n="field_gender">Jinsingiz</label>
+              <div class="pills-radio-group">
+                <label class="pill-radio-label">
+                  <input type="radio" name="gender" value="male" checked>
+                  <span class="pill-radio-text" data-i18n="gender_male">Erkak</span>
+                </label>
+                <label class="pill-radio-label">
+                  <input type="radio" name="gender" value="female">
+                  <span class="pill-radio-text" data-i18n="gender_female">Ayol</span>
+                </label>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+              <div class="form-group">
+                <label data-i18n="field_age">Yoshingiz</label>
+                <input type="number" name="age" class="form-control" value="38" min="16" max="90" required>
+              </div>
+              <div class="form-group">
+                <label data-i18n="field_height">Bo'yingiz (sm)</label>
+                <input type="number" name="height" class="form-control" value="178" min="120" max="230" required>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label data-i18n="field_current_weight">Hozirgi vazningiz (kg)</label>
+                <input type="number" step="0.1" name="currentWeight" class="form-control" value="96.0" min="35" max="250" required>
+              </div>
+              <div class="form-group">
+                <label data-i18n="field_target_weight">Maqsaddagi vazningiz (kg)</label>
+                <input type="number" step="0.1" name="targetWeight" class="form-control" value="82.0" min="35" max="250" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Country & City -->
+          <div id="onboardStep2" style="display: none;">
+            <h4 style="margin-bottom: 16px;" data-i18n="onboard_step2_title">Mamlakat va shahar</h4>
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label data-i18n="field_country">Mamlakat</label>
+              <select name="country" class="form-control">
+                <option value="Uzbekistan" data-i18n="country_uz">O'zbekiston</option>
+                <option value="Kazakhstan" data-i18n="country_kz">Qozog'iston</option>
+                <option value="Turkey" data-i18n="country_tr">Turkiya</option>
+                <option value="Other" data-i18n="country_other">Boshqa davlat</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label data-i18n="field_city">Shahar</label>
+              <input type="text" name="city" class="form-control" value="Toshkent">
+            </div>
+          </div>
+
+          <!-- Step 3: Activity & Job -->
+          <div id="onboardStep3" style="display: none;">
+            <h4 style="margin-bottom: 16px;" data-i18n="onboard_step3_title">Faollik va turmush tarzi</h4>
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label data-i18n="field_activity">Jismoniy faollik</label>
+              <select name="activity" class="form-control">
+                <option value="low" data-i18n="activity_low">Kam harakat (asosan o'tirib ishlash)</option>
+                <option value="medium" selected data-i18n="activity_medium">O'rtacha faollik (haftada 2-3 marta mashg'ulot)</option>
+                <option value="high" data-i18n="activity_high">Yuqori faollik (faol sport / og'ir mehnat)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label data-i18n="field_job">Ish xarakteri</label>
+              <div class="pills-radio-group">
+                <label class="pill-radio-label">
+                  <input type="radio" name="job" value="office" checked>
+                  <span class="pill-radio-text" data-i18n="job_office">Ofis / Masofaviy</span>
+                </label>
+                <label class="pill-radio-label">
+                  <input type="radio" name="job" value="active">
+                  <span class="pill-radio-text" data-i18n="job_active">Harakatdagi / Jismoniy</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Goals & Cuisine Style -->
+          <div id="onboardStep4" style="display: none;">
+            <h4 style="margin-bottom: 16px;" data-i18n="onboard_step4_title">Maqsad va taom uslubi</h4>
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label data-i18n="field_goal">Asosiy maqsad</label>
+              <select name="goal" class="form-control">
+                <option value="lose" selected data-i18n="goal_lose">Vazn tashlash (Ozish)</option>
+                <option value="maintain" data-i18n="goal_maintain">Vaznni saqlash</option>
+                <option value="gain" data-i18n="goal_gain">Sog'lom vazn to'plash</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label data-i18n="field_cuisine_style">Afzal ko'rgan taom uslubi</label>
+              <select name="cuisineStyle" class="form-control">
+                <option value="traditional" selected data-i18n="style_traditional">An'anaviy milliy oshxona</option>
+                <option value="mixed" data-i18n="style_mixed">Aralash (Milliy + Yevropa)</option>
+                <option value="protein" data-i18n="style_protein">Yuqori oqsilli</option>
+                <option value="quick" data-i18n="style_quick">Tez tayyorlanadigan</option>
+                <option value="budget" data-i18n="style_budget">Byudjet / Tejamkor</option>
+                <option value="vegetarian" data-i18n="style_vegetarian">Vegetarian</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Step 5: Health & Safety -->
+          <div id="onboardStep5" style="display: none;">
+            <h4 style="margin-bottom: 16px;" data-i18n="onboard_step5_title">Sog'liq va xavfsizlik</h4>
+            <div class="bmi-disclaimer-box" style="margin-bottom: 16px;">
+              <span>🩺</span>
+              <span data-i18n="medical_safety_notice">
+                Xavfsizlik eslatmasi: Homiladorlik, emizish, juda past BMI yoki og'ir surunkali kasalliklarda individual reja boshlashdan oldin shifokor yoki malakali diyetolog bilan maslahatlashish tavsiya etiladi.
+              </span>
+            </div>
+            <label style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem; cursor: pointer;">
+              <input type="checkbox" id="healthConsentCheck" checked required>
+              <span>Ushbu axborot xarakteridagi shartlarga roziman va sog'lom rejimni boshlashga tayyorman.</span>
+            </label>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="onboardPrevBtn" onclick="App.prevOnboardingStep()" style="display: none;" data-i18n="btn_prev">
+          Orqaga
+        </button>
+        <button type="button" class="btn-primary" id="onboardNextBtn" onclick="App.nextOnboardingStep()" data-i18n="btn_next">
+          Keyingisi ➔
+        </button>
+        <button type="button" class="btn-primary" id="onboardFinishBtn" onclick="App.finishOnboarding()" style="display: none;" data-i18n="btn_finish">
+          Rejani boshlash 🚀
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: SMART FOOD REPLACEMENT (Section 10)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="swapFoodModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h3 data-i18n="swap_modal_title">Taomni almashtirish</h3>
+          <p style="font-size: 0.85rem; color: var(--text-subtle);" data-i18n="swap_modal_desc">
+            Bugun nima yeyishni xohlaysiz? Qaysi milliy taomni tanlasangiz ham, tizim qolgan ovqatlarni unga moslab beradi.
+          </p>
+        </div>
+        <button class="btn-modal-close" onclick="App.closeModal('swapFoodModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="swap-dishes-list" id="swapDishesList">
+          <!-- Populated by App.openSwapModal() -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="App.closeModal('swapFoodModal')" data-i18n="btn_close">Yopish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: RECIPE DETAILS (Section 9)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="recipeDetailsModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="recipeModalTitle">Retsept</h3>
+        <button class="btn-modal-close" onclick="App.closeModal('recipeDetailsModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="height: 200px; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 12px;">
+          <img id="recipeModalImage" src="assets/images/plov.jpg" alt="Taom rasmi" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div style="font-size: 0.88rem; font-weight: 700; color: var(--primary);" id="recipeModalKcal"></div>
+
+        <h4 style="font-size: 1rem; margin-top: 10px;">Kerakli masalliqlar:</h4>
+        <ul id="recipeModalIngredients" style="padding-left: 20px; font-size: 0.9rem; line-height: 1.6;"></ul>
+
+        <h4 style="font-size: 1rem; margin-top: 14px;">Tayyorlash usuli va parhez maslahati:</h4>
+        <p id="recipeModalInstructions" style="font-size: 0.9rem; line-height: 1.6; white-space: pre-line;"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" onclick="App.closeModal('recipeDetailsModal')" data-i18n="btn_close">Yopish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 4: 7-DAY SHOPPING LIST (Section 19)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="shoppingListModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h3 data-i18n="shopping_title">7 kunlik xaridlar ro'yxati</h3>
+          <p style="font-size: 0.85rem; color: var(--text-subtle);" data-i18n="shopping_subtitle">Haftalik taomnomangizga mos saralangan mahsulotlar</p>
+        </div>
+        <button class="btn-modal-close" onclick="App.closeModal('shoppingListModal')">✕</button>
+      </div>
+      <div class="modal-body" id="shoppingListContent">
+        <!-- Populated by App.openShoppingModal() -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" onclick="App.closeModal('shoppingListModal')" data-i18n="btn_close">Tushunarli</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 5: ADMIN CMS PANEL (Section 24 & 32)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="adminCMSModal">
+    <div class="modal-dialog wide">
+      <div class="modal-header">
+        <div>
+          <h3 data-i18n="admin_title">Boshqaruv Paneli (Admin CMS)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-subtle);" data-i18n="admin_subtitle">Taomlar bazasi, retseptlar va Product KPI analitikasi</p>
+        </div>
+        <button class="btn-modal-close" onclick="App.closeModal('adminCMSModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Product KPIs Section (Section 32) -->
+        <h4 style="margin-bottom: 12px;">📊 Product KPI Ko'rsatkichlari (MVP Target vs Actual)</h4>
+        <div id="adminKPIMetricsContainer" style="margin-bottom: 24px;"></div>
+
+        <!-- Food Database Table -->
+        <h4 style="margin-bottom: 12px;">🍲 Taomlar bazasi</h4>
+        <div id="adminFoodsTableContainer"></div>
+
+        <!-- Add Food Form (Section 24) -->
+        <h4 style="margin-top: 24px; margin-bottom: 12px;" data-i18n="admin_add_dish">+ Yangi taom qo'shish</h4>
+        <form id="adminAddDishForm" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; background: #FAFAFA; padding: 18px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+          <div class="form-group">
+            <label>Taom nomi (O'zbekcha):</label>
+            <input type="text" name="dishNameUz" class="form-control" required placeholder="Masalan: Jiz-biz">
+          </div>
+          <div class="form-group">
+            <label>Taom nomi (Ruscha):</label>
+            <input type="text" name="dishNameRu" class="form-control" placeholder="Джиз-быз">
+          </div>
+          <div class="form-group">
+            <label>Mamlakat:</label>
+            <input type="text" name="dishCountry" class="form-control" value="Uzbekistan" required>
+          </div>
+          <div class="form-group">
+            <label>Oshxona (Cuisine):</label>
+            <select name="dishCuisine" class="form-control">
+              <option value="uzbek">Uzbek</option>
+              <option value="kazakh">Kazakh</option>
+              <option value="turkish">Turkish</option>
+              <option value="healthy">Healthy / Diet</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Vaqt (Category):</label>
+            <select name="dishCategory" class="form-control">
+              <option value="lunch">Tushlik (Lunch)</option>
+              <option value="dinner">Kechki ovqat (Dinner)</option>
+              <option value="breakfast">Nonushta (Breakfast)</option>
+              <option value="snack">Poldnik (Snack)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Porsiya (Serving):</label>
+            <input type="text" name="dishServing" class="form-control" value="250 g">
+          </div>
+          <div class="form-group">
+            <label>Kaloriya (kkal):</label>
+            <input type="number" name="dishKcal" class="form-control" value="450" required>
+          </div>
+          <div class="form-group">
+            <label>Oqsil (g) / Yog' (g) / Uglevod (g):</label>
+            <div style="display: flex; gap: 6px;">
+              <input type="number" name="dishProtein" class="form-control" placeholder="Oqsil" value="25">
+              <input type="number" name="dishFat" class="form-control" placeholder="Yog'" value="18">
+              <input type="number" name="dishCarbs" class="form-control" placeholder="Uglevod" value="30">
+            </div>
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label>Rasm URL yoki mahalliy fayl:</label>
+            <input type="text" name="dishImage" class="form-control" value="assets/images/plov.jpg">
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label>Masalliqlar (vergul bilan):</label>
+            <input type="text" name="dishIngredients" class="form-control" placeholder="Go'sht, piyoz, pomidor, zira">
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label>Tayyorlash retsepti:</label>
+            <textarea name="dishRecipe" class="form-control" rows="2" placeholder="Tayyorlash bosqichlari..."></textarea>
+          </div>
+          <div style="grid-column: span 2; display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn-primary">
+              💾 Saqlash va bazaga qo'shish
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="App.closeModal('adminCMSModal')" data-i18n="btn_close">Yopish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 6: PREMIUM & TELEGRAM BOT REGISTRATION
+       ========================================================================= -->
+  <div class="modal-backdrop" id="premiumModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <div class="premium-badge-tag" data-i18n="premium_badge">VIP IMKONIYATLAR</div>
+          <h3 data-i18n="premium_modal_title">Premium a'zolik va Telegram Bot</h3>
+          <p style="font-size: 0.85rem; color: var(--text-subtle);" data-i18n="premium_modal_desc">
+            Telegram orqali shaxsiy diyetolog yordamchisi va eksklyuziv milliy taomnomaga ega bo'ling
+          </p>
+        </div>
+        <button class="btn-modal-close" onclick="App.closeModal('premiumModal')">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="premium-modal-banner">
+          <div class="premium-features-list">
+            <div class="premium-feature-item">
+              <span>🤖</span>
+              <span data-i18n="premium_feat_1">Telegram bot orqali har kuni shaxsiy taomnoma va eslatmalar</span>
+            </div>
+            <div class="premium-feature-item">
+              <span>🍲</span>
+              <span data-i18n="premium_feat_2">Restoranda yoki to'yda nima yeyish bo'yicha tezkor AI maslahat</span>
+            </div>
+            <div class="premium-feature-item">
+              <span>🔄</span>
+              <span data-i18n="premium_feat_3">Cheksiz milliy taomlar almashtirish va retseptlar</span>
+            </div>
+            <div class="premium-feature-item">
+              <span>📉</span>
+              <span data-i18n="premium_feat_4">Haftalik vazn dinamikasi va shaxsiy progress tahlili</span>
+            </div>
+          </div>
+        </div>
+
+        <form id="premiumRegistrationForm" onsubmit="App.handlePremiumSubmit(event)">
+          <!-- Full Name Input -->
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label for="premiumFullName">
+              <span data-i18n="field_fullname">Familiya va Ismingiz</span>:
+              <span style="color: var(--color-danger);">*</span>
+            </label>
+            <input type="text" id="premiumFullName" name="fullName" class="form-control" placeholder="Masalan: Karimov Sardor" required>
+            <div class="form-error-msg" id="nameErrorMsg" data-i18n="fullname_validation_error">
+              Iltimos, Familiya va Ismingizni to'liq kiriting!
+            </div>
+          </div>
+
+          <!-- 9-Digit Phone Input -->
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label for="premiumPhoneInput">
+              <span data-i18n="field_phone_9digit">Telefon raqamingiz (9 xonali)</span>:
+              <span style="color: var(--color-danger);">*</span>
+            </label>
+            <div class="phone-input-wrapper">
+              <div class="phone-prefix">
+                <span>🇺🇿</span>
+                <span>+998</span>
+              </div>
+              <input type="tel" id="premiumPhoneInput" name="phone" class="phone-field-input" placeholder="90 123 45 67" maxlength="12" required>
+            </div>
+            <div class="form-error-msg" id="phoneErrorMsg" data-i18n="phone_validation_error">
+              Telefon raqami aynan 9 ta raqamdan iborat bo'lishi shart! (Masalan: 90 123 45 67)
+            </div>
+            <span style="font-size: 0.78rem; color: var(--text-light); margin-top: 5px; display: block;">
+              Faqat 9 xonali mobil raqam kiriting (masalan: 90 123 45 67)
+            </span>
+          </div>
+
+          <button type="submit" class="btn-premium-gold" id="btnSubmitPremium" style="width: 100%; padding: 14px; font-size: 1.05rem;">
+            <span data-i18n="btn_continue_telegram">Telegram botga o'tish 🚀</span>
+          </button>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="App.closeModal('premiumModal')" data-i18n="btn_close">
+          Yopish
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 7: AI FOOD & BARCODE SCANNER MODAL (Multimodal Vision)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="foodScannerModal">
+    <div class="modal-dialog scanner-modal-dialog">
+      <div class="modal-header">
+        <div>
+          <div class="premium-badge-tag" style="background: #10B981;">🔬 MULTIMODAL AI SCANNER</div>
+          <h3>AI Taom & Shtrix-kod Skaneri</h3>
+          <p style="font-size: 0.85rem; color: var(--text-subtle);" id="scannerInstructionText">
+            📸 Taomni kadr markaziga oling va «Suratga olish» tugmasini bosing
+          </p>
+        </div>
+        <button class="btn-modal-close" onclick="FoodScanner.closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Tabs Bar (Food / Barcode / Nutrition Label) -->
+        <div class="scanner-tabs-bar">
+          <button type="button" class="scanner-tab-btn active" data-mode="food_photo" onclick="FoodScanner.switchTab('food_photo')">
+            🍲 Taom rasmi
+          </button>
+          <button type="button" class="scanner-tab-btn" data-mode="barcode" onclick="FoodScanner.switchTab('barcode')">
+            ▦ Shtrix-kod / QR
+          </button>
+          <button type="button" class="scanner-tab-btn" data-mode="nutrition_label" onclick="FoodScanner.switchTab('nutrition_label')">
+            🏷️ Qadoq yorlig'i
+          </button>
+        </div>
+
+        <!-- Camera Viewport -->
+        <div class="scanner-viewport-wrapper">
+          <video id="scannerVideoFeed" autoplay playsinline muted></video>
+
+          <div class="scanner-viewfinder-overlay">
+            <div class="scanner-target-box">
+              <div class="scanner-laser-line" id="scannerLaserLine"></div>
+            </div>
+          </div>
+
+          <!-- Camera Fallback Area (if camera blocked) -->
+          <div class="camera-fallback-area" id="cameraFallbackArea">
+            <div style="font-size: 2.5rem;">📸</div>
+            <p style="font-size: 0.9rem;">Kameradan foydalanish imkoni bo'lmadi.<br>Rasmni fayldan yuklashingiz mumkin:</p>
+            <button type="button" class="btn-primary" onclick="document.getElementById('scannerFileInput').click()">
+              📁 Rasmni tanlash (JPG / PNG)
+            </button>
+          </div>
+
+          <!-- Loading Overlay -->
+          <div class="scanner-loading-overlay" id="scannerLoadingOverlay">
+            <div class="scanner-spinner"></div>
+            <div style="font-weight: 700; font-size: 0.95rem;">AI Vision taomni tahlil qilmoqda...</div>
+            <div style="font-size: 0.8rem; color: #9CA3AF;">Milliy taomlar bazasi va porsiyalar solishtirilmoqda</div>
+          </div>
+        </div>
+
+        <!-- Controls Bar -->
+        <div class="scanner-controls-bar">
+          <button type="button" class="btn-gallery-upload" onclick="document.getElementById('scannerFileInput').click()">
+            📁 Galereyadan
+          </button>
+
+          <button type="button" class="btn-shutter-capture" onclick="FoodScanner.captureSnapshot()" title="Suratga olish">
+            📸
+          </button>
+
+          <button type="button" class="btn-gallery-upload" onclick="FoodScanner.manualFoodPrompt()">
+            ✏️ Qo'lda kiritish
+          </button>
+        </div>
+
+        <!-- Hidden File Input -->
+        <input type="file" id="scannerFileInput" accept="image/*" style="display: none;">
+
+        <!-- Result Card Box (Injected dynamically) -->
+        <div id="scannerResultBox" style="display: none;"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="FoodScanner.closeModal()" data-i18n="btn_close">
+          Yopish
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 8: STRICT AUTHENTICATION & REGISTRATION MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop" id="authModal">
+    <div class="modal-dialog" style="max-width: 460px;">
+      <div class="modal-header">
+        <div>
+          <div class="premium-badge-tag" style="background: #10B981;">🛡️ XAVFSIZ KIRISH</div>
+          <h3 id="authModalTitle">Hisobga kirish</h3>
+          <p style="font-size: 0.85rem; color: var(--text-subtle);" id="authModalSubtitle">
+            Shaxsiy ozish rejangizni ko'rish uchun kiring
+          </p>
+        </div>
+        <button class="btn-modal-close" onclick="App.closeModal('authModal')">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Auth Tabs -->
+        <div class="scanner-tabs-bar" style="margin-bottom: 18px;">
+          <button type="button" class="scanner-tab-btn active" id="authTabBtnLogin" onclick="App.switchAuthTab('login')">
+            🔑 Kirish
+          </button>
+          <button type="button" class="scanner-tab-btn" id="authTabBtnRegister" onclick="App.switchAuthTab('register')">
+            📝 Ro'yxatdan o'tish
+          </button>
+          <button type="button" class="scanner-tab-btn" id="authTabBtnTelegram" onclick="App.switchAuthTab('telegram')">
+            📱 Telegram
+          </button>
+        </div>
+
+        <!-- Tab 1: Login Form -->
+        <form id="loginForm" onsubmit="App.handleLoginSubmit(event)">
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label class="form-label">Telefon raqami yoki Email:</label>
+            <input type="text" id="loginIdentifier" class="form-control" placeholder="+998 90 123 45 67 yoki email" required autocomplete="username">
+          </div>
+          <div class="form-group" style="margin-bottom: 18px;">
+            <label class="form-label">Parol:</label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+          <div id="loginErrorMsg" style="display: none; color: #DC2626; font-size: 0.82rem; margin-bottom: 12px; padding: 8px 12px; background: #FEE2E2; border-radius: 6px;"></div>
+          <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; font-size: 0.95rem;">
+            Tizimga kirish ➔
+          </button>
+          <div style="text-align: center; margin-top: 14px; font-size: 0.85rem; color: var(--text-subtle);">
+            Hisobingiz yo'qmi? <a href="javascript:void(0)" onclick="App.switchAuthTab('register')" style="color: var(--primary); font-weight: 700;">Ro'yxatdan o'ting</a>
+          </div>
+        </form>
+
+        <!-- Tab 2: Register Form -->
+        <form id="registerForm" style="display: none;" onsubmit="App.handleRegisterSubmit(event)">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Ism va familiyangiz:</label>
+            <input type="text" id="regName" class="form-control" placeholder="Masalan: Sardor Aliyev" required autocomplete="name">
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Telefon raqami yoki Email:</label>
+            <input type="text" id="regIdentifier" class="form-control" placeholder="+998 90 123 45 67" required autocomplete="username">
+          </div>
+          <div class="form-group" style="margin-bottom: 6px;">
+            <label class="form-label">Parol (Kamida 8 ta belgi):</label>
+            <input type="password" id="regPassword" class="form-control" placeholder="Kamida 8 ta belgi" required minlength="8" autocomplete="new-password" oninput="App.checkPasswordStrength(this.value)">
+          </div>
+          <div id="passwordStrengthIndicator" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 14px;">
+            Xavfsizlik: <span>Kamida 8 belgi kiriting</span>
+          </div>
+          <div id="registerErrorMsg" style="display: none; color: #DC2626; font-size: 0.82rem; margin-bottom: 12px; padding: 8px 12px; background: #FEE2E2; border-radius: 6px;"></div>
+          <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; font-size: 0.95rem;">
+            Ro'yxatdan o'tish ➔
+          </button>
+        </form>
+
+        <!-- Tab 3: Telegram Login -->
+        <div id="telegramAuthTab" style="display: none; text-align: center; padding: 10px 0;">
+          <div style="font-size: 2.8rem; margin-bottom: 8px;">🤖</div>
+          <h4 style="margin-bottom: 6px;">Telegram Bot orqali avtomatik kirish</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+            Rasmiy botimiz <b>@muvozanat24_bot</b> ga o'tib, «/start» tugmasini bosing. Sizga bir martalik xavfsiz kirish havolasi beriladi.
+          </p>
+          <a href="https://t.me/muvozanat24_bot?start=auth_web" target="_blank" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 12px 24px; font-size: 0.95rem; background: #0088cc;">
+            ✈️ Telegram Botni ochish
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 9: FOOD CATALOG & GRAMS SELECTOR MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop" id="foodCatalogModal">
+    <div class="modal-dialog catalog-modal-dialog">
+      <div class="modal-header">
+        <div>
+          <div class="premium-badge-tag" style="background: #059669;">📚 TAOMLAR BAZASI VA TANLOV</div>
+          <h3>Taomlar kutubxonasi (Grammlarda hisoblash)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-subtle);">
+            Kerakli taomni tanlang, aniq grammini kiriting va kunlik ratsionga qo'shing
+          </p>
+        </div>
+        <button class="btn-modal-close" onclick="App.closeModal('foodCatalogModal')">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Tabs -->
+        <div class="scanner-tabs-bar" style="margin-bottom: 14px;">
+          <button type="button" class="scanner-tab-btn active" id="catalogTabBtnBrowse" onclick="App.switchCatalogTab('browse')">
+            🔍 Bazadan qidirish va tanlash
+          </button>
+          <button type="button" class="scanner-tab-btn" id="catalogTabBtnCustom" onclick="App.switchCatalogTab('custom')">
+            ➕ Yangi taom yaratish (Bazaga qo'shish)
+          </button>
+        </div>
+
+        <!-- Tab 1: Browse & Select -->
+        <div id="catalogBrowseTab">
+          <!-- Search Bar -->
+          <div style="margin-bottom: 12px;">
+            <input type="text" id="catalogSearchInput" class="form-control" placeholder="🔍 Taom nomi bo'yicha qidiring (Osh, Manti, Somsa, Sho'rva, Salat...)" oninput="App.filterFoodCatalog()" autocomplete="off">
+          </div>
+
+          <!-- Category Filters -->
+          <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px;" id="catalogCategoryPills">
+            <button type="button" class="portion-chip-btn active" data-cat="all" onclick="App.filterCatalogByCategory('all')">Barchasi</button>
+            <button type="button" class="portion-chip-btn" data-cat="breakfast" onclick="App.filterCatalogByCategory('breakfast')">Nonushta</button>
+            <button type="button" class="portion-chip-btn" data-cat="lunch" onclick="App.filterCatalogByCategory('lunch')">Tushlik</button>
+            <button type="button" class="portion-chip-btn" data-cat="dinner" onclick="App.filterCatalogByCategory('dinner')">Kechki ovqat</button>
+            <button type="button" class="portion-chip-btn" data-cat="snack" onclick="App.filterCatalogByCategory('snack')">Salat & Gazaklar</button>
+          </div>
+
+          <!-- Food Cards Grid -->
+          <div class="food-catalog-grid" id="foodCatalogGrid">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Selected Dish Configuration & Grams Calculator Panel -->
+          <div class="selected-dish-config-panel" id="selectedDishConfigPanel" style="display: none;">
+            <div class="selected-dish-header">
+              <img src="assets/images/plov.jpg" id="catalogSelectedThumb" alt="Taom" class="selected-dish-thumb">
+              <div style="flex: 1;">
+                <h4 id="catalogSelectedTitle" style="font-size: 1.1rem; color: #065F46; margin: 0 0 2px 0;">Toshkent to'y oshi</h4>
+                <span id="catalogSelected100gInfo" style="font-size: 0.78rem; color: #047857; font-weight: 600;">100g: 232 kkal | O: 8.8g | Y: 10.4g | U: 25.6g</span>
+              </div>
+            </div>
+
+            <!-- Grams Input & Quick Weights -->
+            <div class="grams-input-row">
+              <label style="font-size: 0.9rem; font-weight: 700; color: #065F46;">
+                ⚖️ Taom vaznini kiriting (grammlarda):
+              </label>
+              <div class="grams-control-box">
+                <input type="number" id="catalogGramsInput" class="grams-control-input" value="250" min="10" max="1500" step="10" oninput="App.updateCatalogCalculations(parseInt(this.value) || 100)">
+                <span style="font-weight: 800; color: #065F46; font-size: 1.1rem;">gramm</span>
+              </div>
+            </div>
+
+            <div class="grams-quick-pills">
+              <button type="button" class="grams-pill-btn" onclick="App.setCatalogGrams(50)">50g</button>
+              <button type="button" class="grams-pill-btn" onclick="App.setCatalogGrams(100)">100g</button>
+              <button type="button" class="grams-pill-btn" onclick="App.setCatalogGrams(150)">150g</button>
+              <button type="button" class="grams-pill-btn" onclick="App.setCatalogGrams(200)">200g</button>
+              <button type="button" class="grams-pill-btn active" onclick="App.setCatalogGrams(250)">250g (O'rta)</button>
+              <button type="button" class="grams-pill-btn" onclick="App.setCatalogGrams(350)">350g (Katta)</button>
+              <button type="button" class="grams-pill-btn" onclick="App.setCatalogGrams(500)">500g</button>
+            </div>
+
+            <!-- Real-time Calculated Nutrition Display -->
+            <div class="calculated-nutrition-display">
+              <div class="calc-nutrient-box">
+                <div class="calc-nutrient-val" id="catalogCalcKcal">580</div>
+                <div class="calc-nutrient-lbl">Jami kkal</div>
+              </div>
+              <div class="calc-nutrient-box">
+                <div class="calc-nutrient-val" id="catalogCalcProtein" style="color: #2563EB;">22g</div>
+                <div class="calc-nutrient-lbl">Oqsil</div>
+              </div>
+              <div class="calc-nutrient-box">
+                <div class="calc-nutrient-val" id="catalogCalcFat" style="color: #D97706;">26g</div>
+                <div class="calc-nutrient-lbl">Yog'</div>
+              </div>
+              <div class="calc-nutrient-box">
+                <div class="calc-nutrient-val" id="catalogCalcCarbs" style="color: #059669;">64g</div>
+                <div class="calc-nutrient-lbl">Uglevod</div>
+              </div>
+            </div>
+
+            <!-- Meal Time Selector & Submit -->
+            <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap;">
+              <select id="catalogMealTimeSelect" class="form-control" style="flex: 1; min-width: 140px; padding: 10px;">
+                <option value="Nonushta">🌅 Nonushta</option>
+                <option value="Tushlik" selected>☀️ Tushlik</option>
+                <option value="Poldnik">🍎 Poldnik (Gazak)</option>
+                <option value="Kechki ovqat">🌙 Kechki ovqat</option>
+              </select>
+
+              <button type="button" class="btn-primary" style="flex: 2; padding: 12px; font-weight: 800; background: #059669;" onclick="App.addSelectedCatalogFoodToDiary()">
+                ➕ Ratsionga qo'shish
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Custom Food Creator -->
+        <div id="catalogCustomTab" style="display: none;">
+          <form id="customFoodCreateForm" onsubmit="App.handleCreateCustomFood(event)">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label class="form-label">Taom yoki mahsulot nomi:</label>
+              <input type="text" id="custDishName" class="form-control" placeholder="Masalan: Qovurilgan tuxum pomidor bilan" required>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+              <div>
+                <label class="form-label">Kategoriya:</label>
+                <select id="custDishCategory" class="form-control">
+                  <option value="breakfast">Nonushta</option>
+                  <option value="lunch" selected>Tushlik</option>
+                  <option value="dinner">Kechki ovqat</option>
+                  <option value="snack">Gazak / Salat</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">Standart porsiya (gramm):</label>
+                <input type="number" id="custDishGrams" class="form-control" value="200" min="10" max="1000" required>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px;">
+              <div>
+                <label class="form-label">Kaloriya (kkal):</label>
+                <input type="number" id="custDishKcal" class="form-control" placeholder="320" required>
+              </div>
+              <div>
+                <label class="form-label">Oqsil (g):</label>
+                <input type="number" id="custDishProtein" class="form-control" placeholder="18">
+              </div>
+              <div>
+                <label class="form-label">Yog' (g):</label>
+                <input type="number" id="custDishFat" class="form-control" placeholder="12">
+              </div>
+              <div>
+                <label class="form-label">Uglevod (g):</label>
+                <input type="number" id="custDishCarbs" class="form-control" placeholder="25">
+              </div>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; font-weight: 800; background: #059669;">
+              💾 Bazaga saqlash va tanlash
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="App.closeModal('foodCatalogModal')">
+          Yopish
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navigation Bar (Section 22) -->
+  <nav class="bottom-nav">
+    <a href="#dashboardSection" class="bottom-nav-item active" data-target="dashboardSection">
+      <span class="bottom-nav-icon">🏠</span>
+      <span data-i18n="nav_home">Bosh sahifa</span>
+    </a>
+    <a href="#mealPlanSection" class="bottom-nav-item" data-target="mealPlanSection">
+      <span class="bottom-nav-icon">🥗</span>
+      <span data-i18n="nav_menu">Menyu</span>
+    </a>
+    <button class="bottom-nav-plus-btn" id="quickAddBtn" title="Vazn kiritish">
+      +
+    </button>
+    <a href="javascript:void(0)" class="bottom-nav-item" onclick="App.openPremiumModal()" style="color: #D97706; font-weight: 700;">
+      <span class="bottom-nav-icon">👑</span>
+      <span data-i18n="btn_premium">Premium</span>
+    </a>
+    <a href="#weightSection" class="bottom-nav-item" data-target="weightSection">
+      <span class="bottom-nav-icon">📊</span>
+      <span data-i18n="nav_progress">Natijalar</span>
+    </a>
+  </nav>
+
+  <!-- =========================================================================
+       AI-NUTRISIOLOG FLOATING CHAT WIDGET
+       ========================================================================= -->
+  <!-- Floating Trigger Button -->
+  <button class="ai-chat-trigger-btn" id="aiChatTriggerBtn" onclick="AINutritionist.toggleWidget()" title="AI-Nutrisiolog bilan suhbat">
+    <span class="ai-trigger-icon">💬</span>
+    <span>AI Nutrisiolog</span>
+  </button>
+
+  <!-- Floating Chat Box -->
+  <div class="ai-chat-box" id="aiChatWidgetBox">
+    <!-- Chat Header -->
+    <div class="ai-chat-header">
+      <div class="ai-header-profile">
+        <div class="ai-avatar-circle">👩‍⚕️</div>
+        <div>
+          <div class="ai-header-title">Dr. Dilnoza (AI Nutrisiolog)</div>
+          <div class="ai-header-status">
+            <span class="ai-online-dot"></span>
+            <span>24/7 Onlayn maslahat</span>
+          </div>
+        </div>
+      </div>
+      <div class="ai-header-controls">
+        <span class="ai-badge-count" id="aiQueriesBadge">Savollar: 10/10</span>
+        <button class="ai-btn-close" onclick="AINutritionist.closeWidget()" title="Yopish">✕</button>
+      </div>
+    </div>
+
+    <!-- Quick Reply Chips -->
+    <div class="ai-quick-chips">
+      <button class="ai-chip-btn" onclick="AINutritionist.sendQuickReply('Palovning kaloriyasi qancha?')">🍲 Palov kaloriyasi?</button>
+      <button class="ai-chip-btn" onclick="AINutritionist.sendQuickReply('Ochlik hissini qanday yengaman?')">⚡ Ochlik hissi?</button>
+      <button class="ai-chip-btn" onclick="AINutritionist.sendQuickReply('Bugun tushlikka nima yesam bo\'ladi?')">🥗 Bugungi tushlik?</button>
+      <button class="ai-chip-btn" onclick="AINutritionist.sendQuickReply('Kechki ovqatni qanday yengillashtiray?')">🌙 Kechki ovqat?</button>
+      <button class="ai-chip-btn" onclick="AINutritionist.sendQuickReply('To\'yda nima yeyish kerak?')">🍗 To'yda nima yey?</button>
+    </div>
+
+    <!-- Messages Area -->
+    <div class="ai-chat-messages" id="aiChatMessages">
+      <!-- Injected by AINutritionist -->
+    </div>
+
+    <!-- Input Bar -->
+    <form class="ai-chat-input-bar" id="aiChatForm" onsubmit="AINutritionist.handleUserSubmit(event)">
+      <input type="text" class="ai-chat-input" id="aiChatInput" placeholder="Taom yoki vazn haqida so'rang..." autocomplete="off">
+      <button type="submit" class="ai-btn-send" title="Yuborish">➔</button>
+    </form>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/translations.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/chart.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ai-nutritionist.js"></script>
+  <script src="js/food-scanner.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
